@@ -106,8 +106,10 @@ def go(config: DictConfig):
                 "main",
                 parameters={
                     "trainval_artifact": "trainval_data.csv:latest",
-                    "ouput_artifact": "random_forest_export",
-                    "rf_config": rf_config
+                    "output_artifact": "random_forest_export",
+                    "rf_config": rf_config,
+                    "val_size": config['modeling']['val_size'],
+                    "max_tfidf_features": config['modeling']['max_tfidf_features']
                 },
             )
 
