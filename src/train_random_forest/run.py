@@ -82,7 +82,7 @@ def go(args):
 
     # Compute r2 and MAE
     logger.info("Scoring")
-    r_squared = sk_pipe.score(X_val, y_val)
+    r_squared = sk_pipe.score(X_val[processed_features], y_val)
 
     y_pred = sk_pipe.predict(X_val)
     mae = mean_absolute_error(y_val, y_pred)
