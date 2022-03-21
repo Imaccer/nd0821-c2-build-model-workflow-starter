@@ -93,7 +93,7 @@ def go(args):
     logger.info("Exporting model")
 
 
-    export_path = os.path.join("model_export")
+    # export_path = os.path.join("model_export")
 
     # Save model package in the MLFlow sklearn format
     if os.path.exists("random_forest_dir"):
@@ -119,7 +119,7 @@ def go(args):
         type="model_export",
         description="Random Forest pipeline export",
     )
-    artifact.add_dir(export_path)
+    artifact.add_dir("random_forest_dir")
 
     run.log_artifact(artifact)
 
