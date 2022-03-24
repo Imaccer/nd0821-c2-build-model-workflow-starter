@@ -13,6 +13,8 @@ import json
 
 import pandas as pd
 import numpy as np
+
+from mlflow.models import infer_signature
 from sklearn.compose import ColumnTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.impute import SimpleImputer
@@ -77,14 +79,17 @@ def go(args):
 
     ######################################
     # Fit the pipeline sk_pipe by calling the .fit method on X_train and y_train
-    sk_pipe.fit(X_train[processed_features],y_train)
+    # sk_pipe.fit(X_train[processed_features],y_train)
+    sk_pipe.fit(X_train,y_train)
     ######################################
 
     # Compute r2 and MAE
     logger.info("Scoring")
-    r_squared = sk_pipe.score(X_val[processed_features], y_val)
+    # r_squared = sk_pipe.score(X_val[processed_features], y_val)
+    r_squared = sk_pipe.score(X_val, y_val)
 
-    y_pred = sk_pipe.predict(X_val[processed_features])
+    # y_pred = sk_pipe.predict(X_val[processed_features])
+    y_pred = sk_pipe.predict(X_val)
     mae = mean_absolute_error(y_val, y_pred)
 
     logger.info(f"Score: {r_squared}")
@@ -99,11 +104,12 @@ def go(args):
     if os.path.exists("random_forest_dir"):
         shutil.rmtree("random_forest_dir")
 
-
+    # Get the columns that we are really using from the pipeline
+    signature = infer_signature(X_val[processed_features], y_pred)
     ######################################
     # Save the sk_pipe pipeline as a mlflow.sklearn model in the directory "random_forest_dir"
     # HINT: use mlflow.sklearn.save_model
-    mlflow.sklearn.save_model(sk_pipe,"random_forest_dir")
+    mlflow.sklearn.save_model(sk_pipe,"random_forest_dir",signature=signature)
     
     ######################################
 
